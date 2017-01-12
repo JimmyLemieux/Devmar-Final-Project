@@ -23,19 +23,23 @@ public final class SprPlayer extends Sprite {
     Animation animation;
     GameEngine GE;
     boolean bFlip, bCanJump;
-    public Vector2 vecLocation;
+    public Vector2 vecLocation, vecStartingLocation = new Vector2(200 / ScrMain.ppm, 40 / ScrMain.ppm);
     public Body bMain;
+    public boolean isDead;
     
     public SprPlayer(World wTemp){
         bCanJump = true;
+        isDead = false;
         atlas = new TextureAtlas("run/megapack.pack");
         animation = new Animation(10f,atlas.getRegions());
-        vecLocation = new Vector2(200 / ScrMain.ppm, 40 / ScrMain.ppm);
+        vecLocation = vecStartingLocation;
         setSize(30 / ScrMain.ppm, 30 / ScrMain.ppm);
         GE = new GameEngine();
         bMain = wTemp.createBody(GE.createBodyDef(wTemp, vecLocation));
+        bMain.setUserData(this);
         bMain.createFixture(GE.createFixtureDef(getWidth(), getHeight(), bMain.getLocalCenter()));
         bMain.setLinearDamping(1);
+        
     }
     
     public void update(){
@@ -58,5 +62,10 @@ public final class SprPlayer extends Sprite {
     public void draw(Batch sbMain) {
         update();
         super.draw(sbMain);
+    }
+    
+    public void die() {
+        System.out.println("DEAD");
+        isDead = true;
     }
 }

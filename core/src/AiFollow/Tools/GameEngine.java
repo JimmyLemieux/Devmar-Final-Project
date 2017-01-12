@@ -27,6 +27,9 @@ import com.badlogic.gdx.physics.box2d.World;
  */
 public class GameEngine {
     private float ppm = ScrMain.ppm;
+    private short CATEGORY_PLAYER = 2;
+    private short CATEGORY_MAP = 4;
+    private short CATEGORY_DEATHSPIKE = 8;
     public BodyDef createBodyDef(World wTemp, Vector2 vecLocation) {  
         BodyDef bdTemp = new BodyDef();
         bdTemp.position.set(vecLocation);
@@ -68,6 +71,7 @@ public class GameEngine {
                 fdTemp = createPolygonFixture((PolygonMapObject) mObj);
             }
             Body bTemp = wTemp.createBody(bdTemp);
+            fdTemp.filter.categoryBits = CATEGORY_MAP;
             bTemp.createFixture(fdTemp);
         }
     }
@@ -116,5 +120,25 @@ public class GameEngine {
         FixtureDef fdTemp = new FixtureDef();
         fdTemp.shape = psTemp;
         return fdTemp;
+    }
+    
+    public void loadObstacleLayer(int nLayer, World wTemp, TiledMap tmTemp) {
+        for(MapObject mObj: tmTemp.getLayers().get(nLayer).getObjects()) {
+            FixtureDef fdTemp = null;
+            BodyDef bdTemp = new BodyDef();
+            bdTemp.type = BodyDef.BodyType.StaticBody;
+            if(mObj instanceof PolylineMapObject) {
+                fdTemp = createPolylineFixture((PolylineMapObject) mObj);
+            } else if(mObj instanceof RectangleMapObject) {
+                fdTemp = createRectangleFixture((RectangleMapObject) mObj);
+                bdTemp.position.set(getRectangleCoordinates((RectangleMapObject) mObj));
+            } else if(mObj instanceof PolygonMapObject) {
+                fdTemp = createPolygonFixture((PolygonMapObject) mObj);
+            }
+            Body bTemp = wTemp.createBody(bdTemp);
+            fdTemp.filter.categoryBits = CATEGORY_DEATHSPIKE;
+            bTemp.createFixture(fdTemp);
+            bTemp.setUserData("Death");
+        }
     }
 }
