@@ -9,6 +9,7 @@ import AiFollow.Sprites.SprEnemy;
 import AiFollow.Sprites.SprPlayer;
 import AiFollow.Tools.DeathCollision;
 import AiFollow.Tools.GameEngine;
+import AiFollow.Tools.HudMain;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -27,11 +28,12 @@ public class ScrMain implements Screen {
     TiledMap tmMap1;
     Viewport vpMain;
     Box2DDebugRenderer B2DR;
-    SpriteBatch batch;
     World wMain;
     SprPlayer sprPlayer;
     SprEnemy sprEnemy;
     GameEngine GE;
+    HudMain hudMain;
+    public int nLives;
     
     @Override
     public void show() {
@@ -43,12 +45,13 @@ public class ScrMain implements Screen {
         vpMain = new FitViewport(1000 / ppm, 500 / ppm, ocMain);
         wMain = new World(new Vector2(0, -11f), false);
         wMain.setContactListener(new DeathCollision());
-        batch = new SpriteBatch();
         sprPlayer = new SprPlayer(wMain);
         GE.loadMapLayer(4, wMain, tmMap1);
         GE.loadMapLayer(5, wMain, tmMap1);
         GE.loadMapLayer(7, wMain, tmMap1);
         GE.loadObstacleLayer(6, wMain, tmMap1);
+        hudMain = new HudMain(otmrMain.getBatch());
+        nLives = 3;
         //sprEnemy = new SprEnemy(wMain);
     }
 
@@ -78,9 +81,11 @@ public class ScrMain implements Screen {
         sprPlayer.draw(otmrMain.getBatch());
         if(sprPlayer.isDead) {
             wMain.destroyBody(sprPlayer.bMain);
-            sprPlayer = new SprPlayer(wMain);  
+            sprPlayer = new SprPlayer(wMain);
+            nLives--;
         }
         otmrMain.getBatch().end();
+        hudMain.draw(nLives);
         B2DR.render(wMain, ocMain.combined);
     }
     

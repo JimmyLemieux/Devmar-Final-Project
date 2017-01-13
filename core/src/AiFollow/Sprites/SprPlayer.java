@@ -44,6 +44,7 @@ public final class SprPlayer extends Sprite {
     
     public void update(){
         vecLocation = bMain.getPosition();
+        if(Gdx.input.isKeyJustPressed(Input.Keys.O)) die();
         setPosition(vecLocation.x - getWidth() / 2, vecLocation.y  - getHeight() / 2);
         if(bCanJump) {
             if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
