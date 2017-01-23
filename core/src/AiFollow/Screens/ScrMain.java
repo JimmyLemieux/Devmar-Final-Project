@@ -113,10 +113,10 @@ public class ScrMain implements Screen {
 
     @Override
     public void hide() {
-        this.dispose();
     }
 
     @Override
     public void dispose() {
+        otmrMain.dispose();
     }
 }

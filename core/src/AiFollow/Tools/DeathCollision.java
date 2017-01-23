@@ -14,8 +14,6 @@ public class DeathCollision implements ContactListener{
     public void beginContact(Contact cnTemp) {
         Fixture fixA = cnTemp.getFixtureA();
         Fixture fixB = cnTemp.getFixtureB();
-        System.out.println(fixA.getBody().getUserData().toString());
-        
         if(fixA.getBody().getUserData() == null) return;
         if(fixB.getBody().getUserData() == null) return;
         System.out.println(fixB.getBody().getUserData().toString());

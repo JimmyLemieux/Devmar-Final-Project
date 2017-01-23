@@ -25,11 +25,13 @@ public class GamMain extends Game {
         super.render();
         if (this.getScreen() instanceof ScrMain) {
             if (scrMain.nLives == 0) {
+                this.getScreen().dispose();
                 scrGameOver = new ScrGameOver();
                 setScreen(scrGameOver);
             }
         } else if (this.getScreen() instanceof ScrGameOver) {
             if (scrGameOver.tbRestart.isPressed()) {
+                this.getScreen().dispose();
                 scrMain = new ScrMain();
                 setScreen(scrMain);
             }
