@@ -1,0 +1,19 @@
+
+textfield.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+tef1
+  rotate: false
+  xy: 1, 1
+  size: 1917, 313
+  orig: 1917, 313
+  offset: 0, 0
+  index: -1
+tef2
+  rotate: false
+  xy: 1920, 1
+  size: 1917, 313
+  orig: 1917, 313
+  offset: 0, 0
+  index: -1
