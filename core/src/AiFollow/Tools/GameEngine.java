@@ -5,6 +5,9 @@
 package AiFollow.Tools;
 
 import AiFollow.Screens.ScrMain;
+import AiFollow.Sprites.SprEnemy;
+import AiFollow.Sprites.SprPlayer;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.PolygonMapObject;
 import com.badlogic.gdx.maps.objects.PolylineMapObject;
@@ -27,9 +30,12 @@ import com.badlogic.gdx.physics.box2d.World;
  */
 public class GameEngine {
     private float ppm = ScrMain.ppm;
-    private short CATEGORY_PLAYER = 2;
-    private short CATEGORY_MAP = 4; 
-    private short CATEGORY_DEATHSPIKE = 8;
+    private static final short CATEGORY_PLAYER = 2;
+    private static final short CATEGORY_MAP = 4; 
+    private static final short CATEGORY_DEATHSPIKE = 8;
+    private static final short CATEGORY_ENEMY_BARRIER = 16;
+    private static final short CATEGORY_ENEMY = 32;
+    private static final short CATEGORY_END = 64;
     public BodyDef createBodyDef(World wTemp, Vector2 vecLocation) {  
         BodyDef bdTemp = new BodyDef();
         bdTemp.position.set(vecLocation);
@@ -37,11 +43,18 @@ public class GameEngine {
         return bdTemp;
     }
     
-    public FixtureDef createFixtureDef(float fWidth, float fHeight, Vector2 vecLoc) {
+    public FixtureDef createFixtureDef(float fWidth, float fHeight, Vector2 vecLoc, Sprite sprTemp) {
         PolygonShape psTemp = new PolygonShape();
         psTemp.setAsBox(fWidth / 2, fHeight / 2, new Vector2(vecLoc.x / 2, vecLoc.y / 2), 0);
         FixtureDef fdMain = new FixtureDef();
         fdMain.shape = psTemp;
+        if(sprTemp instanceof SprPlayer) {
+            fdMain.filter.categoryBits = CATEGORY_PLAYER;
+            fdMain.filter.maskBits = CATEGORY_ENEMY | CATEGORY_MAP | CATEGORY_DEATHSPIKE | CATEGORY_END;
+        } else if(sprTemp instanceof SprEnemy) {
+            fdMain.filter.categoryBits = CATEGORY_ENEMY;
+            fdMain.filter.maskBits = CATEGORY_ENEMY_BARRIER | CATEGORY_PLAYER | CATEGORY_MAP;
+        }
         return fdMain;
     }
     public void createFloor(World wTemp, float fWidth, float fHeight) {
@@ -70,6 +83,8 @@ public class GameEngine {
             } else if(mObj instanceof PolygonMapObject) {
                 fdTemp = createPolygonFixture((PolygonMapObject) mObj);
             }
+            fdTemp.filter.categoryBits = CATEGORY_MAP;
+            fdTemp.filter.maskBits = CATEGORY_PLAYER | CATEGORY_ENEMY;
             Body bTemp = wTemp.createBody(bdTemp);
             bTemp.createFixture(fdTemp);
         }
@@ -138,6 +153,46 @@ public class GameEngine {
             fdTemp.filter.categoryBits = CATEGORY_DEATHSPIKE;
             bTemp.createFixture(fdTemp);
             bTemp.setUserData("Death");
+        }
+    }
+    
+    public Vector2[] getEnemySpawnPoints(int nLayer, World wTemp, TiledMap tmTemp) {
+        int nEnemies  = tmTemp.getLayers().get(nLayer).getObjects().getCount();
+        Vector2 vecSpawnPoints[] = new Vector2[nEnemies];
+        int nCounter = 0;
+        for(RectangleMapObject rectObj: tmTemp.getLayers().get(nLayer).getObjects().getByType(RectangleMapObject.class)) {
+            vecSpawnPoints[nCounter] = getRectangleCoordinates(rectObj);
+            nCounter++;
+        }
+        return vecSpawnPoints;
+    }
+    
+    public void loadEnemyBarriers(int nLayer, World wTemp, TiledMap tmTemp) {
+        for(RectangleMapObject rectObj: tmTemp.getLayers().get(nLayer).getObjects().getByType(RectangleMapObject.class)) {
+            FixtureDef fdTemp;
+            BodyDef bdTemp = new BodyDef();
+            bdTemp.type = BodyDef.BodyType.StaticBody;
+            fdTemp = createRectangleFixture(rectObj);
+            bdTemp.position.set(getRectangleCoordinates(rectObj));
+            Body bTemp = wTemp.createBody(bdTemp);
+            fdTemp.filter.categoryBits = CATEGORY_ENEMY_BARRIER;
+            fdTemp.filter.maskBits = CATEGORY_ENEMY;
+            bTemp.createFixture(fdTemp);
+        }
+    }
+    
+    public void loadEnd(int nLayer, World wTemp, TiledMap tmTemp) {
+        for(RectangleMapObject rectObj: tmTemp.getLayers().get(nLayer).getObjects().getByType(RectangleMapObject.class)) {
+            FixtureDef fdTemp;
+            BodyDef bdTemp = new BodyDef();
+            bdTemp.type = BodyDef.BodyType.StaticBody;
+            fdTemp = createRectangleFixture(rectObj);
+            bdTemp.position.set(getRectangleCoordinates(rectObj));
+            Body bTemp = wTemp.createBody(bdTemp);
+            bTemp.setUserData("End");
+            fdTemp.filter.categoryBits = CATEGORY_END;
+            fdTemp.filter.maskBits = CATEGORY_PLAYER;
+            bTemp.createFixture(fdTemp);
         }
     }
 }

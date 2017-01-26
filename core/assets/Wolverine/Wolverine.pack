@@ -1,0 +1,124 @@
+
+Wolverine.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: xy
+Walk2
+  rotate: false
+  xy: 1, 482
+  size: 56, 51
+  orig: 56, 51
+  offset: 0, 0
+  index: -1
+Walk0
+  rotate: false
+  xy: 59, 479
+  size: 46, 54
+  orig: 46, 54
+  offset: 0, 0
+  index: -1
+Walk1
+  rotate: false
+  xy: 1, 426
+  size: 47, 54
+  orig: 47, 54
+  offset: 0, 0
+  index: -1
+Walk5
+  rotate: false
+  xy: 50, 423
+  size: 50, 54
+  orig: 50, 54
+  offset: 0, 0
+  index: -1
+Walk4
+  rotate: false
+  xy: 1, 369
+  size: 46, 55
+  orig: 46, 55
+  offset: 0, 0
+  index: -1
+Walk3
+  rotate: false
+  xy: 49, 366
+  size: 50, 55
+  orig: 50, 55
+  offset: 0, 0
+  index: -1
+Stand2
+  rotate: false
+  xy: 1, 308
+  size: 51, 56
+  orig: 51, 56
+  offset: 0, 0
+  index: -1
+Stand1
+  rotate: false
+  xy: 54, 307
+  size: 51, 57
+  orig: 51, 57
+  offset: 0, 0
+  index: -1
+Stand0
+  rotate: false
+  xy: 1, 248
+  size: 51, 58
+  orig: 51, 58
+  offset: 0, 0
+  index: -1
+Attack3
+  rotate: false
+  xy: 54, 246
+  size: 57, 59
+  orig: 57, 59
+  offset: 0, 0
+  index: -1
+Attack1
+  rotate: false
+  xy: 1, 175
+  size: 62, 69
+  orig: 62, 69
+  offset: 0, 0
+  index: -1
+Attack0
+  rotate: false
+  xy: 65, 173
+  size: 56, 71
+  orig: 56, 71
+  offset: 0, 0
+  index: -1
+Attack2
+  rotate: false
+  xy: 1, 102
+  size: 76, 69
+  orig: 76, 69
+  offset: 0, 0
+  index: -1
+Jump1
+  rotate: false
+  xy: 79, 87
+  size: 34, 84
+  orig: 34, 84
+  offset: 0, 0
+  index: -1
+Jump2
+  rotate: false
+  xy: 79, 87
+  size: 34, 84
+  orig: 34, 84
+  offset: 0, 0
+  index: -1
+Falling0
+  rotate: false
+  xy: 1, 27
+  size: 65, 73
+  orig: 65, 73
+  offset: 0, 0
+  index: -1
+Jump0
+  rotate: false
+  xy: 68, 1
+  size: 53, 84
+  orig: 53, 84
+  offset: 0, 0
+  index: -1

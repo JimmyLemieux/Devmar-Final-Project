@@ -21,42 +21,50 @@ public class SprEnemy extends Sprite {
     TextureAtlas atlas;
     Animation animation;
     Vector2 vecLocation;
-    Vector2 vecNLocation;
+    float fMaxVelocity = 15, fAcceleration = 100 / ScrMain.ppm, fTimer = 0;
     boolean isFlip;
     Body bMain;
     GameEngine GE;
 
-    public SprEnemy(World wTemp) {
+    public SprEnemy(World wTemp, Vector2 vecStartingLocation) {
         GE = new GameEngine();
-        atlas = new TextureAtlas("run/megapack.pack");
-        animation = new Animation(1 / 10f, atlas.getRegions());
-        vecLocation = new Vector2(500 / ScrMain.ppm, 300 / ScrMain.ppm);
-        setSize(30 / ScrMain.ppm, 30 / ScrMain.ppm);
+        atlas = new TextureAtlas("Enemy/Enemy.pack");
+        animation = new Animation(12f, atlas.getRegions());
+        vecLocation = vecStartingLocation;
+        setSize(20 / ScrMain.ppm, 20 / ScrMain.ppm);
         bMain = wTemp.createBody(GE.createBodyDef(wTemp, vecLocation));
-        bMain.createFixture(GE.createFixtureDef(getWidth(), getHeight(), bMain.getLocalCenter()));
+        bMain.createFixture(GE.createFixtureDef(getWidth(), getHeight(), bMain.getLocalCenter(), this));
+        bMain.setUserData(this);
     }
 
     @Override
-    public void draw(Batch bMain) {
+    public void draw(Batch bMain, float fDelta) {
+        update(fDelta);
         super.draw(bMain);
     }
 
-    public void update(Vector2 playerVec) {
-        followAi(playerVec);
-        setPosition(bMain.getPosition().x - getWidth() / 2, bMain.getPosition().y - getHeight() / 2);
-        setRegion(animation.getKeyFrame(Gdx.graphics.getDeltaTime()));
-    }
-
-    public void followAi(Vector2 playerVec) {
-        int nChange = 0;
-        int nSpeed = 5;
-        System.out.println(Math.abs(playerVec.x * ScrMain.ppm - getX() * ScrMain.ppm));
-        if(Math.abs(playerVec.x * ScrMain.ppm - getX() * ScrMain.ppm) < 200) {
-            if(playerVec.x > getX()) {
-                bMain.applyForce(new Vector2(nSpeed, 0), bMain.getLocalCenter(), true);
-            } else if (playerVec.x < getX()) {
-                bMain.applyForce(new Vector2(nSpeed * -1, 0), bMain.getLocalCenter(), true);
-            }
+    public void update(float fDelta) {
+        if(Math.abs(bMain.getLinearVelocity().x) < fMaxVelocity) {
+            bMain.applyForce(new Vector2(fAcceleration, 0), bMain.getLocalCenter(), true);
         }
+        if(bMain.getLinearVelocity().x == 0) {
+            fAcceleration *= -1;
+            isFlip = !isFlip;
+            bMain.applyLinearImpulse(new Vector2(fAcceleration, 0), bMain.getLocalCenter(), true);
+        }
+        setPosition(bMain.getPosition().x - getWidth() / 2f, bMain.getPosition().y - getHeight() / 2f);
+        setRegion(getFrame(animation));
+    }
+    
+    public TextureRegion getFrame(Animation aniTemp) {
+        TextureRegion texOut;
+        fTimer++;
+        texOut = aniTemp.getKeyFrame(fTimer, true);
+        if (isFlip && !texOut.isFlipX()) {
+            texOut.flip(true, false);
+        } else if (!isFlip && texOut.isFlipX()) {
+            texOut.flip(true, false);
+        }
+        return texOut;
     }
 }
