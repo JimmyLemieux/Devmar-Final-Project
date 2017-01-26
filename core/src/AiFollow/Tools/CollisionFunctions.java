@@ -24,7 +24,7 @@ public class CollisionFunctions implements ContactListener{
             if(fixB.getBody().getUserData().toString().contains(sDeath) || fixB.getBody().getUserData().toString().contains(sEnemy)) {
                 SprPlayer sppTemp = (SprPlayer) fixA.getBody().getUserData();
                 System.out.println("die1");
-                //sppTemp.die();
+                sppTemp.die();
             } else if(fixB.getBody().getUserData().toString().contains(sEnd)) {
                 SprPlayer sppTemp = (SprPlayer) fixA.getBody().getUserData();
                 System.out.println("win");
