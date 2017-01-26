@@ -71,9 +71,9 @@ public class ScrStart extends Game implements Screen {
     public void create() {
         vpMain = new FitViewport(Gdx.graphics.getWidth(),Gdx.graphics.getHeight(), new OrthographicCamera());
         stgMain = new Stage(vpMain);
-        lblMain = new Label("Enter username", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        lblMain = new Label("Enter username and press enter to continue", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         lblMain.setFontScale(3f);
-        lblMain.setPosition(Gdx.graphics.getWidth() / 2 - 150, Gdx.graphics.getHeight() / 2 + 200);
+        lblMain.setPosition(Gdx.graphics.getWidth() / 2 - 420, Gdx.graphics.getHeight() / 2 + 200);
         tblMain = new Table();
         tblMain.center();
         tblMain.add(lblMain).center().pad(1);
